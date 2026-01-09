@@ -28,9 +28,16 @@ jobs:
 
       - name: Build static site
         run: |
-          mkdir -p docs/pages
+          mkdir -p docs
           mkdir -p docs/assets/{css,js,images}
-          cp myproject/myapp/templates/*.html docs/pages/ || true
+
+          # 메인 페이지
+          cp myproject/myapp/templates/index.html docs/index.html
+
+          # 기타 페이지 (선택)
+          cp myproject/myapp/templates/*.html docs/ || true
+
+          # static 파일
           cp -r myproject/static/js/* docs/assets/js/ 2>/dev/null || true
           cp -r myproject/static/images/* docs/assets/images/ 2>/dev/null || true
 
