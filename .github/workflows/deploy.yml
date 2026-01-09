@@ -34,23 +34,20 @@ jobs:
           cp -r myproject/static/js/* docs/assets/js/ 2>/dev/null || true
           cp -r myproject/static/images/* docs/assets/images/ 2>/dev/null || true
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    environment:                
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: docs
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
