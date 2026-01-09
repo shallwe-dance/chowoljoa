@@ -1,4 +1,4 @@
-# Chowoljoa - 엘조윈 공략 및 정보 사이트
+# Chowoljoa - 로스트아크 초월 시스템 계산기
 
 [![GitHub Pages](https://img.shields.io/badge/hosted%20on-GitHub%20Pages-blue)](https://github.com)
 
