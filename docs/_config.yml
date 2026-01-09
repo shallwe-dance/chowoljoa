@@ -5,6 +5,10 @@ description: 엘조윈 공략 및 정보 제공 사이트 - Guide to Elzowin
 author: Chowoljoa Community
 url: https://github.com/yourusername/chowoljoa-main
 
+# When serving from GitHub Pages under a repository (not user site),
+# set `baseurl` to the repository name (e.g. "/chowoljoa-main").
+# This is used in templates as `{{ site.baseurl }}` to build correct paths.
+baseurl: "/chowoljoa-main"
 # Build settings
 theme: jekyll-theme-minimal
 markdown: kramdown
