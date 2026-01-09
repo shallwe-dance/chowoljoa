@@ -32,7 +32,7 @@ jobs:
           mkdir -p docs/assets/{css,js,images}
 
           # 메인 페이지
-          cp myproject/myapp/templates/index.html docs/index.html
+          cp myproject/myapp/templates/ko_index.html docs/index.html
 
           # 기타 페이지 (선택)
           cp myproject/myapp/templates/*.html docs/ || true
