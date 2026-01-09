@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="엘조윈 계산기 - 데미지, 비용 등 게임 계산">
+    <title>계산기 - Chowoljoa</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #3498db;
+        }
+
+        main {
+            min-height: calc(100vh - 200px);
+            padding: 2rem 0;
+        }
+
+        .calculator-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .calculator-section h2 {
+            color: #2c3e50;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 0.5rem;
+        }
+
+        .calculator-section h3 {
+            color: #2c3e50;
+            margin: 1.5rem 0 1rem 0;
+            font-size: 1.3rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            font-family: inherit;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .button-group {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        button {
+            padding: 0.75rem 1.5rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        button.reset {
+            background-color: #95a5a6;
+        }
+
+        button.reset:hover {
+            background-color: #7f8c8d;
+        }
+
+        .result {
+            background-color: #f0f7ff;
+            border-left: 4px solid #3498db;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            border-radius: 4px;
+            display: none;
+        }
+
+        .result.show {
+            display: block;
+        }
+
+        .result h4 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .result-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .result-item:last-child {
+            border-bottom: none;
+        }
+
+        .result-value {
+            font-weight: bold;
+            color: #3498db;
+            font-size: 1.1rem;
+        }
+
+        .back-button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.5rem 1rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .back-button:hover {
+            background-color: #2980b9;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        .grid-calculator {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .grid-calculator {
+                grid-template-columns: 1fr;
+            }
+
+            .button-group {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>🎮 Chowoljoa</h1>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="ko_index.html">한국어</a></li>
+                <li><a href="en_index.html">English</a></li>
+                <li><a href="calculate.html">Calculator</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <a href="../index.html" class="back-button">← 돌아가기</a>
+
+        <h2 style="color: #2c3e50; margin-bottom: 2rem; font-size: 2rem;">🧮 엘조윈 계산기</h2>
+
+        <div class="grid-calculator">
+            <!-- 데미지 계산기 -->
+            <div class="calculator-section">
+                <h3>⚔️ 데미지 계산기</h3>
+                <form id="damageCalcForm">
+                    <div class="form-group">
+                        <label for="baseAttack">기본 공격력:</label>
+                        <input type="number" id="baseAttack" min="1" value="10" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="attackBonus">공격 보너스:</label>
+                        <input type="number" id="attackBonus" min="0" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="defense">방어력:</label>
+                        <input type="number" id="defense" min="0" value="5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="critChance">크리티컬 확률 (%):</label>
+                        <input type="number" id="critChance" min="0" max="100" value="0" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" onclick="calculateDamage()">계산</button>
+                        <button type="reset" class="reset">초기화</button>
+                    </div>
+                    <div id="damageResult" class="result">
+                        <h4>계산 결과</h4>
+                        <div class="result-item">
+                            <span>예상 데미지:</span>
+                            <span class="result-value" id="damageOutput">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span>크리티컬 데미지:</span>
+                            <span class="result-value" id="critOutput">0</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 비용 계산기 -->
+            <div class="calculator-section">
+                <h3>💰 비용 계산기</h3>
+                <form id="costCalcForm">
+                    <div class="form-group">
+                        <label for="itemCost">아이템 가격:</label>
+                        <input type="number" id="itemCost" min="0" value="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">수량:</label>
+                        <input type="number" id="quantity" min="1" value="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="discountPercent">할인율 (%):</label>
+                        <input type="number" id="discountPercent" min="0" max="100" value="0" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" onclick="calculateCost()">계산</button>
+                        <button type="reset" class="reset">초기화</button>
+                    </div>
+                    <div id="costResult" class="result">
+                        <h4>계산 결과</h4>
+                        <div class="result-item">
+                            <span>원가:</span>
+                            <span class="result-value" id="originalCost">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span>할인액:</span>
+                            <span class="result-value" id="discountAmount">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span>최종 비용:</span>
+                            <span class="result-value" id="finalCost">0</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 경험치 계산기 -->
+            <div class="calculator-section">
+                <h3>⭐ 경험치 계산기</h3>
+                <form id="expCalcForm">
+                    <div class="form-group">
+                        <label for="baseExp">기본 경험치:</label>
+                        <input type="number" id="baseExp" min="0" value="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="difficultyMultiplier">난이도 배수:</label>
+                        <select id="difficultyMultiplier">
+                            <option value="0.5">쉬움 (x0.5)</option>
+                            <option value="1" selected>보통 (x1.0)</option>
+                            <option value="1.5">어려움 (x1.5)</option>
+                            <option value="2">매우 어려움 (x2.0)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="bonusExp">보너스 경험치:</label>
+                        <input type="number" id="bonusExp" min="0" value="0" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" onclick="calculateExp()">계산</button>
+                        <button type="reset" class="reset">초기화</button>
+                    </div>
+                    <div id="expResult" class="result">
+                        <h4>계산 결과</h4>
+                        <div class="result-item">
+                            <span>획득 경험치:</span>
+                            <span class="result-value" id="totalExp">0</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- 리소스 계산기 -->
+            <div class="calculator-section">
+                <h3>📦 리소스 계산기</h3>
+                <form id="resourceCalcForm">
+                    <div class="form-group">
+                        <label for="resourceA">리소스 A:</label>
+                        <input type="number" id="resourceA" min="0" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceB">리소스 B:</label>
+                        <input type="number" id="resourceB" min="0" value="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="resourceC">리소스 C:</label>
+                        <input type="number" id="resourceC" min="0" value="0" required>
+                    </div>
+                    <div class="button-group">
+                        <button type="button" onclick="calculateResources()">계산</button>
+                        <button type="reset" class="reset">초기화</button>
+                    </div>
+                    <div id="resourceResult" class="result">
+                        <h4>계산 결과</h4>
+                        <div class="result-item">
+                            <span>총 리소스:</span>
+                            <span class="result-value" id="totalResource">0</span>
+                        </div>
+                        <div class="result-item">
+                            <span>평균:</span>
+                            <span class="result-value" id="avgResource">0</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Chowoljoa. All rights reserved.</p>
+    </footer>
+
+    <script>
+        function calculateDamage() {
+            const baseAttack = parseFloat(document.getElementById('baseAttack').value);
+            const attackBonus = parseFloat(document.getElementById('attackBonus').value);
+            const defense = parseFloat(document.getElementById('defense').value);
+            const critChance = parseFloat(document.getElementById('critChance').value);
+
+            const totalAttack = baseAttack + attackBonus;
+            const damage = Math.max(1, totalAttack - defense);
+            const critDamage = damage * (1 + critChance / 100);
+
+            document.getElementById('damageOutput').textContent = damage.toFixed(1);
+            document.getElementById('critOutput').textContent = critDamage.toFixed(1);
+            document.getElementById('damageResult').classList.add('show');
+        }
+
+        function calculateCost() {
+            const itemCost = parseFloat(document.getElementById('itemCost').value);
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const discountPercent = parseFloat(document.getElementById('discountPercent').value);
+
+            const originalCost = itemCost * quantity;
+            const discountAmount = originalCost * (discountPercent / 100);
+            const finalCost = originalCost - discountAmount;
+
+            document.getElementById('originalCost').textContent = originalCost.toFixed(0);
+            document.getElementById('discountAmount').textContent = discountAmount.toFixed(0);
+            document.getElementById('finalCost').textContent = finalCost.toFixed(0);
+            document.getElementById('costResult').classList.add('show');
+        }
+
+        function calculateExp() {
+            const baseExp = parseFloat(document.getElementById('baseExp').value);
+            const difficultyMultiplier = parseFloat(document.getElementById('difficultyMultiplier').value);
+            const bonusExp = parseFloat(document.getElementById('bonusExp').value);
+
+            const totalExp = (baseExp * difficultyMultiplier) + bonusExp;
+
+            document.getElementById('totalExp').textContent = totalExp.toFixed(0);
+            document.getElementById('expResult').classList.add('show');
+        }
+
+        function calculateResources() {
+            const resourceA = parseFloat(document.getElementById('resourceA').value);
+            const resourceB = parseFloat(document.getElementById('resourceB').value);
+            const resourceC = parseFloat(document.getElementById('resourceC').value);
+
+            const totalResource = resourceA + resourceB + resourceC;
+            const avgResource = totalResource / 3;
+
+            document.getElementById('totalResource').textContent = totalResource.toFixed(0);
+            document.getElementById('avgResource').textContent = avgResource.toFixed(2);
+            document.getElementById('resourceResult').classList.add('show');
+        }
+    </script>
+</body>
+</html>

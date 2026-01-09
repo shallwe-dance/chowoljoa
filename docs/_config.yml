@@ -1,0 +1,27 @@
+# Jekyll configuration for GitHub Pages
+
+title: Chowoljoa
+description: 엘조윈 공략 및 정보 제공 사이트 - Guide to Elzowin
+author: Chowoljoa Community
+url: https://github.com/yourusername/chowoljoa-main
+
+# Build settings
+theme: jekyll-theme-minimal
+markdown: kramdown
+
+# Plugins
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Exclude from processing
+exclude:
+  - myproject/
+  - myenv/
+  - .gitignore
+  - README.md
+  - GITHUB_PAGES_SETUP.md
+  - build-docs.ps1
+  - build-docs.sh
+  - Gemfile
+  - Gemfile.lock

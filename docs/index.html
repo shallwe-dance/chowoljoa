@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Chowoljoa - 엘조윈 공략 및 정보 제공 사이트">
+    <title>Chowoljoa - 엘조윈 공략</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f5f5;
+        }
+
+        .navbar {
+            background-color: #2c3e50;
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .navbar h1 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .nav-menu {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .nav-menu a:hover {
+            color: #3498db;
+        }
+
+        main {
+            min-height: calc(100vh - 200px);
+            padding: 2rem 0;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        .content-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .content-section h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .content-section p {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        footer {
+            background-color: #2c3e50;
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+            margin-top: 2rem;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        .button {
+            display: inline-block;
+            background-color: #3498db;
+            color: white;
+            padding: 0.8rem 1.6rem;
+            text-decoration: none;
+            border-radius: 4px;
+            transition: background-color 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .button:hover {
+            background-color: #2980b9;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        .card h4 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 1rem;
+            }
+
+            .hero h2 {
+                font-size: 1.8rem;
+            }
+
+            .navbar h1 {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <h1>🎮 Chowoljoa</h1>
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="pages/ko_index.html">한국어</a></li>
+                <li><a href="pages/en_index.html">English</a></li>
+                <li><a href="pages/calculate.html">Calculator</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main class="container">
+        <section class="hero">
+            <h2>엘조윈 공략 정보</h2>
+            <p>Welcome to Chowoljoa - Your guide to Elzowin</p>
+        </section>
+
+        <div class="grid">
+            <div class="card">
+                <h4>📚 공략 가이드</h4>
+                <p>엘조윈의 모든 것을 알아봅시다. 무기, 타일, 맵 정보 등을 제공합니다.</p>
+                <a href="pages/ko_index.html" class="button">자세히 보기</a>
+            </div>
+
+            <div class="card">
+                <h4>🌍 English Guide</h4>
+                <p>Learn everything about Elzowin. Weapons, tiles, maps and more.</p>
+                <a href="pages/en_index.html" class="button">View More</a>
+            </div>
+
+            <div class="card">
+                <h4>🧮 계산기</h4>
+                <p>다양한 계산 도구들을 사용해보세요. 효율적인 게임 플레이를 위해.</p>
+                <a href="pages/calculate.html" class="button">계산기 사용</a>
+            </div>
+        </div>
+
+        <section class="content-section">
+            <h3>프로젝트 정보</h3>
+            <p>
+                Chowoljoa는 엘조윈 게임에 관한 공략 정보와 도구를 제공하는 정적 사이트입니다.
+                GitHub Pages를 통해 호스팅되며, 모든 내용은 커뮤니티의 기여로 이루어져 있습니다.
+            </p>
+            <p style="margin-top: 1rem;">
+                <strong>최근 업데이트:</strong> <span id="last-updated">로딩 중...</span>
+            </p>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Chowoljoa. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // 마지막 업데이트 시간 표시
+        document.getElementById('last-updated').textContent = new Date().toLocaleString('ko-KR');
+    </script>
+</body>
+</html>

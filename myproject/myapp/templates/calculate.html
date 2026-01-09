@@ -1,0 +1,805 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="/static/images/favicon.ico" type="image/x-icon">
+  <title>
+  초월 계산기 -
+  {% if item_type == "upper" %}
+    상의
+  {% elif item_type == "weapon" %}
+    무기
+  {% elif item_type == "others" %}
+    기타 방어구
+  {% else %}
+    {{ item_type }}
+  {% endif %}
+  {{ stage }}단계
+</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+
+  <!-- 헤더 -->
+  <nav class="bg-indigo-900 shadow-md px-6 py-4 flex justify-between items-center">
+    <a href='/' class="text-2xl font-bold text-white">초월조아</a>
+    
+    <div class="space-x-4">
+      <a href="/en" class="text-white hover:font-bold font-medium">English</a>
+       <div class="relative inline-block">
+      <button id="helpBtn" class="text-white hover:font-bold font-medium px-2 py-1">
+        도움말
+      </button>
+      <!-- 돋보기 추천창처럼 버튼 바로 아래에 붙는 도움말 패널 -->
+      <div id="helpPanel"
+           class="hidden absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded shadow-lg z-50">
+           <!-- 닫기 버튼 -->
+  <button id="helpCloseBtn"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-4xl leading-none">
+    &times;
+  </button>
+        <div class="p-4 text-gray-700">
+          <h4 class="font-semibold text-indigo-800 mb-2">사용 방법</h4>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>1. 엘조윈의 가호 입력</li>
+            <li>2. 시작 타일, 도착 타일, 특수 타일 선택</li>
+            <li>3. '석판 상태 입력 완료' 버튼 클릭</li>
+            <li>4. 인게임 정화 결과에 따라 버튼 클릭</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="relative inline-block">
+      <button id="contactBtn" class="text-white hover:font-bold font-medium px-2 py-1">
+      문의하기
+    </button>
+
+
+<!-- 문의하기 폼 패널 -->
+    <div id="contactPanel"
+         class="hidden absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded shadow-lg z-50">
+      <button id="contactCloseBtn"
+              class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-4xl leading-none">
+        &times;
+      </button>
+      <form id="contactForm" action="/contact/" method="POST" class="p-4 space-y-4">
+        {% csrf_token %}
+        <div>
+          <label for="contactSubject" class="block text-sm font-medium text-gray-700">제목</label>
+          <input type="text" name="subject" id="contactSubject"
+                 class="mt-1 block w-full border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 required maxlength=100>
+        </div>
+        <div>
+          <label for="contactContent" class="block text-sm font-medium text-gray-700">내용</label>
+          <textarea name="content" id="contactContent" rows="4"
+                    class="mt-1 block w-full border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    required maxlength=2000></textarea>
+        </div>
+        <div>
+          <label for="contactReplyTo" class="block text-sm font-medium text-gray-700">(선택)답장 받을 이메일 </label>
+          <input type="text" name="reply_to" id="contactReplyTo"
+                 class="mt-1 block w-full border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                 placeholder="ex. abc123@gmail.com" maxlength=50> 
+        </div>
+
+        <div>
+    <label for="contactImage" class="block text-sm font-medium text-gray-700">첨부 사진</label>
+    <input type="file" name="image" id="contactImage"
+           accept="image/*"
+           class="mt-1 block w-full text-sm
+                  file:mr-4 file:py-2 file:px-4
+                  file:rounded file:border-0
+                  file:text-sm file:font-semibold
+                  file:bg-indigo-50 file:text-indigo-700
+                  hover:file:bg-indigo-100" />
+    <p id="fileSizeError" class="text-sm text-red-600 hidden">
+  파일 크기는 최대 2 MB 이내여야 합니다.
+    </p>
+  </div>
+
+
+        <button id="contactSubmitBtn" type="submit"
+                class="w-full bg-indigo-600 text-white py-2 rounded hover:bg-indigo-700">
+          문의하기
+        </button>
+      </form>
+    </div>
+    </div>
+    </div>
+  </nav>
+
+  <div id="helpPanel" class="hidden max-w-4xl mx-auto mt-4 bg-white border-l-4 border-indigo-500 p-6 rounded shadow">
+  <h3 class="text-xl font-semibold text-indigo-800 mb-2">도움말</h3>
+  <p class="text-gray-700">
+    • 석판 상태를 먼저 ‘석판 상태 입력 완료’ 버튼으로 등록하세요.<br/>
+    • 이후 ‘정화 결과 선택 ↓’에서 원하는 이동 칸 버튼을 눌러 정화하세요.<br/>
+    • ‘정화 횟수’가 업데이트되며, 확률 계산이 자동으로 갱신됩니다.<br/>
+    <!-- 필요에 따라 더 상세한 설명 추가 -->
+  </p>
+</div>
+
+  <!-- 본문 -->
+  <div class="max-w-4xl mx-auto mt-10 bg-white rounded-xl shadow p-8">
+    <h2 class="text-2xl font-bold mb-4 text-indigo-800">
+  {% if item_type == "upper" %}
+    상의
+  {% elif item_type == "weapon" %}
+    무기
+  {% elif item_type == "others" %}
+    기타 방어구
+  {% else %}
+    {{ item_type }}
+  {% endif %}
+  {{ stage }}단계 초월 확률 계산기
+</h2>
+
+    <!-- 석판 미니게임 UI (이미지 기반 예시) -->
+    <div class="mt-6">
+
+      <div class="mt-6">
+  <label for="elzowinBlessing" class="block text-indigo-800 font-medium mb-1">엘조윈의 가호 (0~8)</label>
+  <div class="flex items-center space-x-2">
+    <input type="number" id="elzowinBlessing" name="elzowinBlessing" min="0" max="8" value="0"
+           class="w-24 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+    <!-- <button onclick="confirmElzowin()" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+      확인
+    </button> -->
+  </div>
+</div>
+
+  <br/>
+
+
+  
+
+<div class="flex flex-col items-center">
+
+  <div id="tablet" class="inline-grid gap-1 bg-slate-100 p-4 rounded"></div>
+
+  <!-- 정화 선택 텍스트 (초기에는 hidden) -->
+   <br/>
+   <h3 id="totalCountLabel" class="text-base text-indigo-600 mb-1 hidden">
+  정화 횟수: <span id="totalCountValue">0</span>
+</h3>
+  <h3 id="spiritChoiceLabel" class="text-lg font-semibold text-indigo-800 mb-2 hidden">
+    정화 결과 선택 ↓
+  </h3>
+
+  <!-- 초기 버튼 -->
+  <div id="confirmTabletWrapper" class="mt-4">
+    <button onclick="confirmTabletState()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+      석판 상태 입력 완료
+    </button>
+  </div>
+
+  <!-- 정화 버튼들 -->
+  <div id="spiritButtons" class="mt-4 flex gap-2 hidden"></div>
+
+</div>
+<div id="customDropdownWrapper" class="absolute z-50 hidden bg-white border rounded shadow text-lg">
+  <ul id="customDropdownList" class="text-sm text-gray-800">
+    <li data-value="path" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      일반 타일 
+    </li>
+    <li data-value="start" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      시작 타일 
+    </li>
+    <li data-value="goal" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      도착 타일 
+    </li>
+    <li data-value="replicate" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      복제 타일 
+      <img src="/static/images/tiles/replicate_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="purification" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      정화 타일 
+      <img src="/static/images/tiles/purification_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="development" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      전개 타일 
+      <img src="/static/images/tiles/development_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="enhancement" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      강화 타일 
+      <img src="/static/images/tiles/enhancement_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="awakening" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      각성 타일 
+      <img src="/static/images/tiles/awakening_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+  </ul>
+</div>
+
+<script src="{% static 'js/tabletMaps.js' %}"></script>
+<script>
+  let totalCount = 0;
+
+  let currentDir = [0,1];
+
+  let specialEffects = {
+  enhancementCount: 0,  // enhancement 누적 횟수
+  nextMultiplier: 1,     // awakening 효과로 다음 정화 수 배수
+  replicateNext: false,  // replicate 타일 효과 여부
+  pendingExtraSteps: 0   // development/purification로 즉시 진행할 추가 정화 수
+};
+
+
+  const TILE_COLORS = {
+  'wall': 'bg-transparent',
+  'path': 'bg-gray-300',
+  'start': 'bg-green-400',
+  'goal': 'bg-pink-300',
+  'spirit': 'bg-black text-white font-bold',
+  'visited': 'bg-[#FFF0E9]',
+  'replicate' : 'custom',
+  'purification' : 'custom',
+  'development' : 'custom',
+  'enhancement' : 'custom',
+  'awakening' : 'custom'
+};
+
+function updateSpiritButtons() {
+  const container = document.getElementById('spiritButtons');
+  container.innerHTML = '';  // 기존 버튼 모두 삭제
+
+  // 기본값 1~4에 enhancementCount 만큼 더함
+  for (let base = 1; base <= 4; base++) {
+    const val = base + specialEffects.enhancementCount;
+    const btn = document.createElement('button');
+    btn.textContent = val;
+    btn.classList.add('bg-indigo-600','text-white','px-4','py-2','rounded','hover:bg-indigo-700');
+    btn.addEventListener('click', () => {
+      // 0) 횟수 증가
+      totalCount++;
+      document.getElementById('totalCountValue').textContent = totalCount;
+      // 1) 정령 이동 실행
+      advanceSpirit(val);
+      // 2) 서버에 전송
+      sendTabletState("purify");
+      
+    });
+    container.appendChild(btn);
+  }
+}
+
+function confirmTabletState() {
+  const elzowinInput = document.getElementById("elzowinBlessing");
+  elzowinInput.disabled = true;
+  elzowinInput.classList.add('bg-gray-200', 'cursor-not-allowed', 'opacity-50');
+
+  // 1. 버튼 숨김
+  document.getElementById("confirmTabletWrapper").classList.add("hidden");
+
+  const countLabel = document.getElementById('totalCountLabel');
+  document.getElementById('totalCountValue').textContent = totalCount;
+  countLabel.classList.remove('hidden');
+
+  // 2. 텍스트 표시
+  document.getElementById("spiritChoiceLabel").classList.remove("hidden");
+
+  // 3. 정화 버튼 표시
+  document.getElementById("spiritButtons").classList.remove("hidden");
+
+  // 4. 정화 버튼 최초 렌더링
+  updateSpiritButtons();
+
+  sendTabletState("confirm");
+}
+
+  const itemType = "{{ item_type }}";   // 예: "upper"
+  const stage = "{{ stage }}";          // 예: 1
+  const mapKey = `${itemType}-${stage}`;
+  const tabletMap = tabletMaps[mapKey];
+  //console.log("mapKey =", mapKey, "loaded map:", tabletMaps[mapKey]);
+
+
+  let spiritPos = findStartPosition(tabletMap);
+  const visited = new Set();
+
+  function findStartPosition(map) {
+  for (let r = 0; r < map.length; r++) {
+    for (let c = 0; c < map[0].length; c++) {
+      if (map[r][c] === 'start') {
+        // 시작 타일 옆에 path 가 있는 방향을 currentDir 으로 초기화
+        [[0,1],[1,0],[0,-1],[-1,0]].some(([dr,dc]) => {
+          if (map[r+dr]?.[c+dc] === 'path') {
+            currentDir = [dr, dc];
+            return true;
+          }
+        });
+        return [r, c];
+      }
+    }
+  }
+  return null;
+}
+  const PATH_TILES = [
+  'path','replicate','purification',
+  'development','enhancement','awakening'
+];
+
+const SPECIAL_TILES = [
+  'replicate', 'purification',
+  'development', 'enhancement', 'awakening'
+]
+
+const NUM_SPECIAL_TILES = {
+  '1':4, '2':5, '3':5, '4':6, '5':6, '6':7, '7':7
+}
+let unreached_special_tiles=NUM_SPECIAL_TILES[stage]
+
+  function getNextPosition(r, c, map, visited) {
+  const [dr, dc] = currentDir;
+  const right = [ dc, -dr ];
+  const left  = [ -dc, dr ];
+  const back  = [ -dr, -dc ];
+
+  // 1️⃣ First pass: only walk on PATH_TILES
+  for (const [dR, dC] of [[dr,dc], right, left, back]) {
+    const nr = r + dR, nc = c + dC, key = `${nr},${nc}`;
+    if (
+      nr >= 0 && nr < map.length &&
+      nc >= 0 && nc < map[0].length &&
+      PATH_TILES.includes(map[nr][nc]) &&
+      !visited.has(key)
+    ) {
+      currentDir = [dR, dC];
+      return [nr, nc];
+    }
+  }
+
+  // 2️⃣ Fallback: if we couldn’t move onto a path tile, see if goal is next
+  for (const [dR, dC] of [[dr,dc], right, left, back]) {
+    const nr = r + dR, nc = c + dC;
+    if (
+      nr >= 0 && nr < map.length &&
+      nc >= 0 && nc < map[0].length &&
+      map[nr][nc] === 'goal'
+    ) {
+      currentDir = [dR, dC];
+      return [nr, nc];
+    }
+  }
+
+  return null;
+}
+
+  let selectedPos = null;
+  function showCustomDropdown(x, y) {
+  const dropdown = document.getElementById("customDropdownWrapper");
+  dropdown.style.left = `${x}px`;
+  dropdown.style.top = `${y + window.scrollY}px`;
+  dropdown.classList.remove("hidden");
+}
+
+function hideCustomDropdown() {
+  document.getElementById("customDropdownWrapper").classList.add("hidden");
+}
+
+  function renderTablet() {
+  const container = document.getElementById('tablet');
+  container.innerHTML = '';
+
+  // 그리드 크기 설정
+  container.style.gridTemplateColumns = `repeat(${tabletMap[0].length}, 2.5rem)`;
+
+  for (let r = 0; r < tabletMap.length; r++) {
+    for (let c = 0; c < tabletMap[0].length; c++) {
+      const key = `${r},${c}`;
+      let type = tabletMap[r][c];
+
+      // 정령 위치 반영
+      if (spiritPos && r === spiritPos[0] && c === spiritPos[1]) {
+        type = 'spirit';
+      } else if (visited.has(key) && type !== 'goal') {
+        type = 'visited';
+      }
+
+      // 셀 생성
+      const cell = document.createElement('div');
+      cell.classList.add('w-10', 'h-10', 'rounded', 'flex', 'items-center', 'justify-center', 'cursor-pointer','transition-transform', 'duration-100', 'hover:scale-105');
+
+      // 선택된 셀이라면 강조 표시
+if (selectedPos && selectedPos[0] === r && selectedPos[1] === c) {
+  cell.classList.add('ring-2', 'ring-indigo-500');
+}
+
+// 색상 적용
+if (type === 'goal') {
+  cell.style.backgroundColor = '#D487BB';
+} else if (type === 'visited') {
+  cell.classList.add('bg-[#FFF0E9]');
+} else if (TILE_COLORS[type] === 'custom') {
+  cell.style.backgroundImage = `url('/static/images/tiles/${type}_1.jpg')`;
+  cell.style.backgroundSize = 'cover';
+  cell.style.backgroundPosition = 'center'; 
+} else if (TILE_COLORS[type]) {
+  cell.classList.add(...TILE_COLORS[type].split(' '));
+} 
+
+
+// 텍스트 표시
+if (type === 'spirit') {
+  cell.textContent = '●';
+} if (type === 'goal') {
+  cell.textContent = '도착';
+}
+
+// 클릭 시 좌표 저장만
+cell.addEventListener('click', (e) => {
+  selectedPos = [r, c];
+   showCustomDropdown(e.clientX, e.clientY);
+});
+
+document.addEventListener('click', (e) => {
+  const dropdown = document.getElementById("customDropdownWrapper");
+  if (!dropdown.contains(e.target) && !e.target.closest('#tablet')) {
+    hideCustomDropdown();
+  }
+});
+
+container.appendChild(cell);
+    }
+  }
+}
+
+  function advanceSpirit(times = 1) {
+    if (!spiritPos) {
+    alert("!!! 시작 타일을 설정해주세요 !!!");
+    location.reload();
+    return;
+  }
+
+    document.getElementById("elzowinBlessing").disabled = true;
+    document.getElementById("elzowinBlessing").classList.add('bg-gray-200', 'cursor-not-allowed', 'opacity-50');
+//   document.querySelector('button[onclick="confirmElzowin()"]').disabled = true;
+//   document.querySelector('button[onclick="confirmElzowin()"]').classList.add("bg-gray-300", "cursor-not-allowed", "opacity-60");
+// document.querySelector('button[onclick="confirmElzowin()"]').classList.remove("bg-indigo-600", "hover:bg-indigo-700");
+
+// 1) awakening 적용: nextMultiplier이 3 이상이면 한 번만 곱해 주고 초기화
+  let base = times;
+  if (specialEffects.nextMultiplier > 1) {
+    base *= specialEffects.nextMultiplier;
+    specialEffects.nextMultiplier = 1;
+  }
+
+  // 2) replicate 적용: “방금 사용된 정화 효과만큼” 추가
+  let totalSteps = base;
+  if (specialEffects.replicateNext) {
+    totalSteps += base;
+    specialEffects.replicateNext = false;
+  }
+
+  // 3) development / purification 로 즉시 추가
+  totalSteps += specialEffects.pendingExtraSteps;
+  specialEffects.pendingExtraSteps = 0;
+
+  // 실제 이동 루프
+  for (let i = 0; i < totalSteps; i++) {
+    visited.add(`${spiritPos[0]},${spiritPos[1]}`);
+
+    //다음 위치 계산
+    const next = getNextPosition(spiritPos[0], spiritPos[1], tabletMap, visited);
+    
+    if (!next) {
+      alert("더 이상 이동할 수 없습니다!");
+      break;
+    }
+
+    //실제로 이동 및 렌더링
+    spiritPos = next;
+    renderTablet();
+
+    //만약 도착 타일 만날 경우 + 특수 타일 지나칠 경우
+    const [cr, cc] = spiritPos;
+    if (SPECIAL_TILES.includes(tabletMap[cr][cc])) {
+      unreached_special_tiles--;
+      //console.log(unreached_special_tiles)
+    }
+    if (tabletMap[cr][cc] === 'goal') {
+      alert("🎉 정령이 목표에 도달했습니다!");
+      location.reload();
+      return;
+  }
+}
+
+    const [r, c] = spiritPos;
+    const tileType = tabletMap[r][c];
+    // 특수 타일 효과 처리
+switch (tileType) {
+  case 'awakening':
+    specialEffects.nextMultiplier = 3;
+    break;
+
+  case 'enhancement':
+    specialEffects.enhancementCount++ ;
+    updateSpiritButtons();  // ← 버튼 갱신
+    break;
+
+  case 'replicate':
+    // 초기 추가 이동 횟수 = times
+    let remaining = base;
+
+    while (remaining > 0) {
+      // 현재 위치 방문 처리
+      visited.add(`${spiritPos[0]},${spiritPos[1]}`);
+
+      // 한 칸 이동
+      const extra = getNextPosition(spiritPos[0], spiritPos[1], tabletMap, visited);
+      if (!extra) break;         // 더 이상 이동 불가능하면 중단
+      spiritPos = extra;
+      renderTablet();
+
+      // 도착한 타일 종류 확인
+      const arrived = tabletMap[spiritPos[0]][spiritPos[1]];
+      if (arrived === 'replicate') {
+        // “replicate→replicate” 체인이 일어나면
+        // 남은 추가 이동량에 다시 times 만큼 더해줌
+        remaining += base;
+      }
+
+      remaining--;
+    }
+    break;
+
+  case 'development':
+    // 도착 즉시 4칸 추가 이동
+        for (let j = 0; j < 4; j++) {
+          visited.add(`${spiritPos[0]},${spiritPos[1]}`);
+          const extra = getNextPosition(spiritPos[0], spiritPos[1], tabletMap, visited);
+          if (!extra) break;
+          spiritPos = extra;
+          renderTablet();
+        }
+        break;
+
+  case 'purification':
+    alert("정화 타일에 도착했습니다. 이동한 거리를 선택해주세요. 이번 선택은 정화 횟수에 포함되지 않습니다.");
+    totalCount--;
+    break;
+    }
+}
+
+  // 초기 렌더링
+  renderTablet();
+
+  document.querySelectorAll('#customDropdownList li').forEach(item => {
+  item.addEventListener('click', () => {
+    if (!selectedPos) return;
+
+    const [r, c] = selectedPos;
+    const oldTile = tabletMap[r][c];
+    const newTile = item.dataset.value;
+
+    if (oldTile === 'start' && newTile !== 'start') {
+      spiritPos=null;
+    }
+
+    if (newTile === 'start') {
+      // start는 하나만 존재하게 초기화
+      for (let i = 0; i < tabletMap.length; i++) {
+        for (let j = 0; j < tabletMap[0].length; j++) {
+          if (tabletMap[i][j] === 'start') {
+            tabletMap[i][j] = 'path';
+          }
+        }
+      }
+      spiritPos = [r, c];
+    }
+
+    // ❗ 중요: 이건 무조건 실행해야 함!
+    tabletMap[r][c] = newTile;
+
+    selectedPos = null;
+    hideCustomDropdown();
+    renderTablet();
+  });
+});
+//<!-- ***********************************석판 UI 종료****************************************** -->
+
+// CSRF 토큰 읽기 (Django 기준)
+function getCookie(name) {
+  return document.cookie
+    .split('; ')
+    .find(row => row.startsWith(name + '='))
+    ?.split('=')[1];
+}
+
+const opportunities = {
+    'upper' : {1:4, 2:4, 3:5, 4:5, 5:6, 6:6, 7:7},
+    'others' : {1:5, 2:5, 3:6, 4:6, 5:7, 6:7, 7:8},
+    'weapon' : {1:4, 2:4, 3:5, 4:5 , 5:6, 6:6, 7:7}
+}
+const n = opportunities[itemType]?.[parseInt(stage,10)] ?? 0;
+
+function sendTabletState(action, extra) {
+  // 1) input 값 읽기
+  const elzowinLevel = parseInt(
+    document.getElementById('elzowinBlessing').value,
+    10
+  ) || 0;
+
+  fetch("/api/update-tablet/", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    body: JSON.stringify({
+      item_type: itemType,
+      stage: stage,
+      mapKey: mapKey,
+      tabletMap: tabletMap,
+      spiritPos: spiritPos,      // 시작 위치가 있으면 포함
+      action: action,            // "confirm" 또는 "purify"
+      totalCount: totalCount,
+      enhancementCount: specialEffects.enhancementCount,
+      elzowinLevel: elzowinLevel,
+      n: n,
+      unreached_special_tiles:unreached_special_tiles,
+      visitedList: Array.from(visited).map(s => {
+        const [r, c] = s.split(',').map(Number);
+        return [r, c];
+      }),
+      extra: extra || null       // 필요시 추가 정보
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.status === "ok") {
+      
+      const pN = (data.probability.within_n * 100).toFixed(2);
+      const pN1 = (data.probability.within_n_plus_1 * 100).toFixed(2);
+
+      // 결정 로직
+  const mcPct = (data.my_expectations[0] * 100).toFixed(1);
+  const mcPct_1 = (data.my_expectations[1] * 100).toFixed(1);
+  const recN  = (pN    >= mcPct*0.95)
+                ? '초월 계속!'
+                : '초월 중단';
+  const recN1 = (pN1 >= mcPct_1*0.95)
+                ? '초월 계속!'
+                : '초월 중단';
+
+      // 1) 첫 번째 li
+  const liN      = document.getElementById('probWithinN');
+  liN.querySelector('.prob-text').innerText = `${n}회 이내 도착 확률(3등급): ${pN}%`;
+  liN.querySelector('.rec-text').innerText  = `추천 : ${recN}`;
+
+  // 2) 두 번째 li
+  const liN1     = document.getElementById('probWithinN1');
+  liN1.querySelector('.prob-text').innerText = `${n+1}회 이내 도착 확률(2등급): ${pN1}%`;
+  liN1.querySelector('.rec-text').innerText  = `추천 : ${recN1}`;
+
+  
+
+      document.getElementById('probabilityResults').classList.remove('hidden');
+    }
+  })
+  .catch(err => console.error("전송 실패:", err));
+}
+</script>
+
+<script>
+  const helpBtn       = document.getElementById('helpBtn');
+const helpPanel     = document.getElementById('helpPanel');
+const helpCloseBtn  = document.getElementById('helpCloseBtn');
+const contactBtn     = document.getElementById('contactBtn');
+const contactPanel   = document.getElementById('contactPanel');
+const contactCloseBtn= document.getElementById('contactCloseBtn');
+
+// 토글 (기존)
+helpBtn.addEventListener('click', e => {
+  e.preventDefault();
+  helpPanel.classList.toggle('hidden');
+});
+
+// 문의하기 토글
+contactBtn.addEventListener('click', e => {
+  e.preventDefault();
+  contactPanel.classList.toggle('hidden');
+  // 열 때 도움말 패널 닫기
+  helpPanel.classList.add('hidden');
+});
+contactCloseBtn.addEventListener('click', e => {
+  e.stopPropagation();
+  contactPanel.classList.add('hidden');
+});
+
+// 내부 × 버튼 클릭 시 닫기
+helpCloseBtn.addEventListener('click', e => {
+  e.stopPropagation();  // 혹시 이벤트 버블링 방지
+  helpPanel.classList.add('hidden');
+});
+</script>
+    
+    <!--************************테스트 전용**********************-->
+    <div id="probabilityResults" class="mt-6 p-4 bg-indigo-100 rounded hidden">
+  <h3 class="text-lg font-semibold text-indigo-800 mb-2">등급 달성 확률</h3>
+  <ul class="list-disc list-inside text-gray-800 space-y-1">
+    <li id="probWithinN" class="flex justify-between items-center">
+      <span class="prob-text"></span>
+      <span class="rec-text font-semibold"></span>
+    </li>
+    <li id="probWithinN1" class="flex justify-between items-center">
+      <span class="prob-text"></span>
+      <span class="rec-text font-semibold"></span>
+    </li>
+  </ul>
+</div>
+<!--**************************************************-->
+
+<script>
+  document.getElementById('contactImage')
+    .addEventListener('change', function() {
+      const file = this.files[0];
+      const errorEl = document.getElementById('fileSizeError');
+      const MAX_BYTES = 2 * 1024 * 1024; // 2 MB
+
+      if (file && file.size > MAX_BYTES) {
+        errorEl.classList.remove('hidden');
+        this.value = '';  // 파일 선택 초기화
+      } else {
+        errorEl.classList.add('hidden');
+      }
+    });
+</script>
+
+<script>
+  function getCookie(name) {
+    const value = document.cookie
+      .split('; ')
+      .find(row => row.startsWith(name + '='));
+    return value ? value.split('=')[1] : null;
+  }
+  document.addEventListener('DOMContentLoaded', () => {
+    const form       = document.getElementById('contactForm');
+    const panel      = document.getElementById('contactPanel');
+    const successDiv = document.getElementById('contactSuccess');
+    const submitBtn  = document.getElementById('contactSubmitBtn');
+
+    form.addEventListener('submit', async e => {
+      e.preventDefault();  // ← 페이지 리로드 차단
+
+      // 버튼 비활성화
+      //submitBtn.disabled = true;
+      //submitBtn.classList.add('opacity-50','cursor-not-allowed');
+
+      // 비동기 전송
+      const formData = new FormData(form);
+      try {
+        const res = await fetch(form.action, {
+          method: form.method,
+          headers: { 'X-CSRFToken': getCookie('csrftoken') },
+          body: formData
+        });
+        if (!res.ok) throw new Error(res.status);
+
+        // 성공 처리
+        panel.classList.add('hidden');       // 패널 닫고
+        //successDiv.classList.remove('hidden'); // 완료 메시지 보여주고
+        alert("문의가 정상적으로 접수되었습니다.");
+        form.reset();
+      } catch (err) {
+        console.error(err);
+        //submitBtn.disabled = false;
+        //submitBtn.classList.remove('opacity-50','cursor-not-allowed');
+        alert('전송 중 오류가 발생했습니다. 다시 시도해주세요.');
+      }
+    });
+  });
+</script>
+    <!-- 돌아가기 -->
+    <div class="mt-8">
+      <a href="javascript:history.back()" class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">목록</a>
+    </div>
+  </div>
+
+  
+
+</body>
+</html>
+
+<!-- todo : 문의하기 폼 작동하게. -->
