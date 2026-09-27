@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head><meta charset="UTF-8">
+        <title>초월조아 - 로스트아크 초월 계산기</title>
+	<link rel="icon" href="../static/images/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+	<meta name="description" content="로스트아크 초월 계산기 - 등급 달성 확률 계산, 최적화">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body data-item="" data-stage="" data-static="../static/">
+        <nav class="bg-indigo-900 shadow-md px-6 py-4 flex justify-between items-center">
+            <!-- 로고 텍스트 -->
+            <div class="text-2xl font-bold text-white">초월조아</div>
+
+            <!-- 네비게이션 버튼 -->
+            <div class="space-x-4">
+                <a href="../en/" class="text-white hover:font-bold font-medium">English</a>
+       <div class="relative inline-block">
+      <button id="helpBtn" class="text-white hover:font-bold font-medium px-2 py-1">
+        도움말
+      </button>
+      <!-- 돋보기 추천창처럼 버튼 바로 아래에 붙는 도움말 패널 -->
+      <div id="helpPanel"
+           class="hidden absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded shadow-lg z-50">
+           <!-- 닫기 버튼 -->
+  <button id="helpCloseBtn"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-4xl leading-none">
+    &times;
+  </button>
+        <div class="p-4 text-gray-700">
+          <h4 class="font-semibold text-indigo-800 mb-2">사용 방법</h4>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>1. 엘조윈의 가호 입력</li>
+            <li>2. 시작 타일, 도착 타일, 특수 타일 선택</li>
+            <li>3. '석판 상태 입력 완료' 버튼 클릭</li>
+            <li>4. 인게임 정화 결과에 따라 버튼 클릭</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/shallwe-dance/chowoljoa/issues" class="text-white hover:underline">문의 / GitHub Issues</a></div>
+  </nav>
+
+
+
+
+<!-- 카테고리 선택 버튼 -->
+<div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap gap-4 justify-center">
+  <button onclick="showCategory('upper', this)" class="category-btn bg-sky-500 font-bold text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">상의</button>
+  <button onclick="showCategory('others', this)" class="category-btn bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">기타 방어구</button>
+  <button onclick="showCategory('weapon', this)" class="category-btn bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">무기</button>
+</div>
+
+<!-- 카테고리별 그리드 -->
+<main class="max-w-7xl mx-auto px-4 py-8">
+
+  <!-- 상의 -->
+  <div id="grid-upper" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <a href="../ko/calculate/upper/1/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 1단계</h2>
+      <img src="../static/images/upper/1.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/upper/2/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 2단계</h2>
+      <img src="../static/images/upper/2.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/upper/3/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 3단계</h2>
+      <img src="../static/images/upper/3.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/upper/4/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 4단계</h2>
+      <img src="../static/images/upper/4_25.PNG" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/upper/5/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 5단계</h2>
+      <img src="../static/images/upper/5_25.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/upper/6/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 6단계</h2>
+      <img src="../static/images/upper/6_25.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/upper/7/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">상의 7단계</h2>
+      <img src="../static/images/upper/7.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+  </div>
+
+  <!-- 기타 방어구 -->
+  <div id="grid-others" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 hidden">
+    <a href="../ko/calculate/others/1/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 1단계</h2>
+      <img src="../static/images/others/1단계.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/others/2/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 2단계</h2>
+      <img src="../static/images/others/2단계.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/others/3/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 3단계</h2>
+      <img src="../static/images/others/3단계.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/others/4/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 4단계</h2>
+      <img src="../static/images/others/4단계.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/others/5/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 5단계</h2>
+      <img src="../static/images/others/5단계.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/others/6/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 6단계</h2>
+      <img src="../static/images/others/6단계_25.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/others/7/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">기타 방어구 7단계</h2>
+      <img src="../static/images/others/7단계_25.png" alt="기타 이미지" class="w-full h-32 object-contain" />
+    </a>
+  </div>
+
+  <!-- 무기 -->
+  <div id="grid-weapon" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 hidden">
+    <a href="../ko/calculate/weapon/1/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 1단계</h2>
+      <img src="../static/images/weapon/1단계.png" alt="강화 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/weapon/2/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 2단계</h2>
+      <img src="../static/images/weapon/2단계.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/weapon/3/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 3단계</h2>
+      <img src="../static/images/weapon/3단계.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/weapon/4/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 4단계</h2>
+      <img src="../static/images/weapon/4단계.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/weapon/5/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 5단계</h2>
+      <img src="../static/images/weapon/5단계.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/weapon/6/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 6단계</h2>
+      <img src="../static/images/weapon/6단계.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../ko/calculate/weapon/7/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">무기 7단계</h2>
+      <img src="../static/images/weapon/7단계.png" alt="상의 이미지" class="w-full h-32 object-contain" />
+    </a>
+    <!-- 필요한 만큼 버튼 추가 -->
+  </div>
+
+</main>
+
+<!-- 카테고리 전환 스크립트 -->
+<script src="../static/js/page-3560e0beae002300.js"></script>
+
+
+
+<script src="../static/js/page-923c1300bbf78969.js"></script>
+
+
+
+
+    </body>
+</html>

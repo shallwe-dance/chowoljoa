@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" href="../../../../static/images/favicon.ico" type="image/x-icon">
+  <title>
+  초월 계산기 -
+
+    상의
+
+  4단계
+</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+<script src="../../../../static/js/calculator.js"></script>
+</head>
+<body data-item="upper" data-stage="4" data-static="../../../../static/" class="bg-gray-100 min-h-screen">
+
+  <!-- 헤더 -->
+  <nav class="bg-indigo-900 shadow-md px-6 py-4 flex justify-between items-center">
+    <a href="../../../../ko/" class="text-2xl font-bold text-white">초월조아</a>
+
+    <div class="space-x-4">
+      <a href="../../../../en/" class="text-white hover:font-bold font-medium">English</a>
+       <div class="relative inline-block">
+      <button id="helpBtn" class="text-white hover:font-bold font-medium px-2 py-1">
+        도움말
+      </button>
+      <!-- 돋보기 추천창처럼 버튼 바로 아래에 붙는 도움말 패널 -->
+      <div id="helpPanel"
+           class="hidden absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded shadow-lg z-50">
+           <!-- 닫기 버튼 -->
+  <button id="helpCloseBtn"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-4xl leading-none">
+    &times;
+  </button>
+        <div class="p-4 text-gray-700">
+          <h4 class="font-semibold text-indigo-800 mb-2">사용 방법</h4>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>1. 엘조윈의 가호 입력</li>
+            <li>2. 시작 타일, 도착 타일, 특수 타일 선택</li>
+            <li>3. '석판 상태 입력 완료' 버튼 클릭</li>
+            <li>4. 인게임 정화 결과에 따라 버튼 클릭</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/shallwe-dance/chowoljoa/issues" class="text-white hover:underline">문의 / GitHub Issues</a></div>
+  </nav>
+
+
+
+  <!-- 본문 -->
+  <div class="max-w-4xl mx-auto mt-10 bg-white rounded-xl shadow p-8">
+    <h2 class="text-2xl font-bold mb-4 text-indigo-800">
+
+    상의
+
+  4단계 초월 확률 계산기
+</h2>
+
+    <!-- 석판 미니게임 UI (이미지 기반 예시) -->
+    <div class="mt-6">
+
+      <div class="mt-6">
+  <label for="elzowinBlessing" class="block text-indigo-800 font-medium mb-1">엘조윈의 가호 (0~8)</label>
+  <div class="flex items-center space-x-2">
+    <input type="number" id="elzowinBlessing" name="elzowinBlessing" min="0" max="8" value="0"
+           class="w-24 px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+    <!-- <button onclick="confirmElzowin()" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">
+      확인
+    </button> -->
+  </div>
+</div>
+
+  <br/>
+
+
+
+
+<div class="flex flex-col items-center">
+
+  <div id="tablet" class="inline-grid gap-1 bg-slate-100 p-4 rounded"></div>
+
+  <!-- 정화 선택 텍스트 (초기에는 hidden) -->
+   <br/>
+   <h3 id="totalCountLabel" class="text-base text-indigo-600 mb-1 hidden">
+  정화 횟수: <span id="totalCountValue">0</span>
+</h3>
+  <h3 id="spiritChoiceLabel" class="text-lg font-semibold text-indigo-800 mb-2 hidden">
+    정화 결과 선택 ↓
+  </h3>
+
+  <!-- 초기 버튼 -->
+  <div id="confirmTabletWrapper" class="mt-4">
+    <button onclick="confirmTabletState()" class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700">
+      석판 상태 입력 완료
+    </button>
+  </div>
+
+  <!-- 정화 버튼들 -->
+  <div id="spiritButtons" class="mt-4 flex gap-2 hidden"></div>
+
+</div>
+<div id="customDropdownWrapper" class="absolute z-50 hidden bg-white border rounded shadow text-lg">
+  <ul id="customDropdownList" class="text-sm text-gray-800">
+    <li data-value="path" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      일반 타일
+    </li>
+    <li data-value="start" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      시작 타일
+    </li>
+    <li data-value="goal" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      도착 타일
+    </li>
+    <li data-value="replicate" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      복제 타일
+      <img src="../../../../static/images/tiles/replicate_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="purification" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      정화 타일
+      <img src="../../../../static/images/tiles/purification_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="development" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      전개 타일
+      <img src="../../../../static/images/tiles/development_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="enhancement" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      강화 타일
+      <img src="../../../../static/images/tiles/enhancement_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+    <li data-value="awakening" class="flex justify-between px-4 py-2 hover:bg-indigo-100 cursor-pointer">
+      각성 타일
+      <img src="../../../../static/images/tiles/awakening_1.jpg" alt="일반" class="w-6 h-6" />
+    </li>
+  </ul>
+</div>
+
+<script src="../../../../static/js/tabletMaps.js"></script>
+<script src="../../../../static/js/page-04e930c1c04368ac.js"></script>
+
+<script src="../../../../static/js/page-923c1300bbf78969.js"></script>
+
+    <!--************************테스트 전용**********************-->
+    <div id="probabilityResults" class="mt-6 p-4 bg-indigo-100 rounded hidden">
+  <h3 class="text-lg font-semibold text-indigo-800 mb-2">등급 달성 확률</h3>
+  <ul class="list-disc list-inside text-gray-800 space-y-1">
+    <li id="probWithinN" class="flex justify-between items-center">
+      <span class="prob-text"></span>
+      <span class="rec-text font-semibold"></span>
+    </li>
+    <li id="probWithinN1" class="flex justify-between items-center">
+      <span class="prob-text"></span>
+      <span class="rec-text font-semibold"></span>
+    </li>
+  </ul>
+</div>
+<!--**************************************************-->
+
+
+
+
+    <!-- 돌아가기 -->
+    <div class="mt-8">
+      <a href="../../../../ko/" class="inline-block px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700">목록</a>
+    </div>
+  </div>
+
+
+
+</body>
+</html>
+
+<!-- todo : 문의하기 폼 작동하게. -->

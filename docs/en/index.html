@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><meta charset="UTF-8">
+        <title>Chowoljoa - Lost Ark Transcend Calculator</title>
+	<link rel="icon" href="../static/images/favicon.ico" type="image/x-icon">
+	<link rel="apple-touch-icon" href="../static/apple-touch-icon.png">
+	<meta name="description" content="Lost Ark Transcendence Calculator - calculate probability, optimization">
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body data-item="" data-stage="" data-static="../static/">
+        <nav class="bg-indigo-900 shadow-md px-6 py-4 flex justify-between items-center">
+            <!-- 로고 텍스트 -->
+            <div class="text-2xl font-bold text-white">Chowoljoa</div>
+
+            <!-- 네비게이션 버튼 -->
+            <div class="space-x-4">
+                <a href="../ko/" class="text-white hover:font-bold font-medium">한국어</a>
+       <div class="relative inline-block">
+      <button id="helpBtn" class="text-white hover:font-bold font-medium px-2 py-1">
+        Help
+      </button>
+      <!-- 돋보기 추천창처럼 버튼 바로 아래에 붙는 도움말 패널 -->
+      <div id="helpPanel"
+           class="hidden absolute top-full right-0 mt-2 w-80 bg-white border border-gray-200 rounded shadow-lg z-50">
+           <!-- 닫기 버튼 -->
+  <button id="helpCloseBtn"
+          class="absolute top-2 right-2 text-gray-500 hover:text-gray-700 text-4xl leading-none">
+    &times;
+  </button>
+        <div class="p-4 text-gray-700">
+          <h4 class="font-semibold text-indigo-800 mb-2">How to use?</h4>
+          <ul class="list-disc list-inside text-sm space-y-1">
+            <li>1. Input Elzowin's Blessing</li>
+            <li>2. Select start, goal, and special tiles</li>
+            <li>3. Click 'Calculate' button</li>
+            <li>4. Click in-game draw results and check probabilities and recommendation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <a href="https://github.com/shallwe-dance/chowoljoa/issues" class="text-white hover:underline">Contact / GitHub Issues</a></div>
+  </nav>
+<!--
+
+-->
+
+
+<!-- 카테고리 선택 버튼 -->
+<div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap gap-4 justify-center">
+  <button onclick="showCategory('upper', this)" class="category-btn bg-sky-500 font-bold text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">Chestpiece</button>
+  <button onclick="showCategory('others', this)" class="category-btn bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">Others</button>
+  <button onclick="showCategory('weapon', this)" class="category-btn bg-indigo-600 text-white px-4 py-2 rounded-full hover:bg-indigo-700 transition">Weapon</button>
+</div>
+
+<!-- 카테고리별 그리드 -->
+<main class="max-w-7xl mx-auto px-4 py-8">
+
+  <!-- 상의 -->
+  <div id="grid-upper" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+    <a href="../en/calculate/upper/1/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.1</h2>
+      <img src="../static/images/upper/1.png" alt="chestpiece lv1 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/upper/2/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.2</h2>
+      <img src="../static/images/upper/2.png" alt="chestpiece lv2 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/upper/3/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.3</h2>
+      <img src="../static/images/upper/3.png" alt="chestpiece lv3 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/upper/4/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.4</h2>
+      <img src="../static/images/upper/4_25.PNG" alt="chestpiece lv4 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/upper/5/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.5</h2>
+      <img src="../static/images/upper/5_25.png" alt="chestpiece lv5 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/upper/6/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.6</h2>
+      <img src="../static/images/upper/6_25.png" alt="chestpiece lv6 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/upper/7/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Chestpiece Lv.7</h2>
+      <img src="../static/images/upper/7.png" alt="chestpiece lv7 img" class="w-full h-32 object-contain" />
+    </a>
+  </div>
+
+  <!-- 기타 방어구 -->
+  <div id="grid-others" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 hidden">
+    <a href="../en/calculate/others/1/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.1</h2>
+      <img src="../static/images/others/1단계.png" alt="others lv1 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/others/2/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.2</h2>
+      <img src="../static/images/others/2단계.png" alt="others lv2 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/others/3/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.3</h2>
+      <img src="../static/images/others/3단계.png" alt="others lv3 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/others/4/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.4</h2>
+      <img src="../static/images/others/4단계.png" alt="others lv4 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/others/5/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.5</h2>
+      <img src="../static/images/others/5단계.png" alt="others lv5 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/others/6/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.6</h2>
+      <img src="../static/images/others/6단계_25.png" alt="others lv6 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/others/7/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Others Lv.7</h2>
+      <img src="../static/images/others/7단계_25.png" alt="others lv7 img" class="w-full h-32 object-contain" />
+    </a>
+  </div>
+
+  <!-- 무기 -->
+  <div id="grid-weapon" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 hidden">
+    <a href="../en/calculate/weapon/1/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.1</h2>
+      <img src="../static/images/weapon/1단계.png" alt="weapon lv1 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/weapon/2/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.2</h2>
+      <img src="../static/images/weapon/2단계.png" alt="weapon lv2 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/weapon/3/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.3</h2>
+      <img src="../static/images/weapon/3단계.png" alt="weapon lv3 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/weapon/4/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.4</h2>
+      <img src="../static/images/weapon/4단계.png" alt="weapon lv4 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/weapon/5/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.5</h2>
+      <img src="../static/images/weapon/5단계.png" alt="weapon lv5 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/weapon/6/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.6</h2>
+      <img src="../static/images/weapon/6단계.png" alt="weapon lv6 img" class="w-full h-32 object-contain" />
+    </a>
+
+    <a href="../en/calculate/weapon/7/" class="bg-slate-800 text-white rounded-2xl p-6 shadow hover:shadow-lg hover:bg-slate-700 transition-all text-left">
+      <h2 class="text-lg font-semibold mb-2">Weapon Lv.7</h2>
+      <img src="../static/images/weapon/7단계.png" alt="weapon lv7 img" class="w-full h-32 object-contain" />
+    </a>
+    <!-- 필요한 만큼 버튼 추가 -->
+  </div>
+
+</main>
+
+<!-- 카테고리 전환 스크립트 -->
+<script src="../static/js/page-3560e0beae002300.js"></script>
+
+
+
+<script src="../static/js/page-923c1300bbf78969.js"></script>
+
+
+
+
+    </body>
+</html>

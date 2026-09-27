@@ -1,5 +1,9 @@
 # Chowoljoa (초월조아)
 
+**This is the `github-pages` branch.** The working static site is in `docs/`.
+See [PAGES.md](PAGES.md) for publishing, rebuilding, and testing instructions.
+The original Django application is maintained on `main`; its setup is documented below.
+
 A Django application for Lost Ark transcendence probability calculations, with Korean and English interfaces. The calculator evaluates tablet paths and uses a precomputed expectation table. Contact submissions are stored in SQLite and managed through Django admin.
 
 ## Local development
