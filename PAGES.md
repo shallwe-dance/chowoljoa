@@ -10,6 +10,8 @@ The default project URL is https://shallwe-dance.github.io/chowoljoa/ (unless a 
 
 Only publish `/docs`, which contains the generated HTML, JavaScript, images, and calculation data. No Python server, database, secrets, or uploaded contact attachments are included in that folder. `.nojekyll` disables Jekyll processing.
 
+The hosted landing page redirects to `en/` by default. A repository-root `index.html` also redirects to `docs/en/` if Pages is configured to publish from `/` instead of `/docs`, so visitors see the English app rather than the README. Publishing from `/docs` remains recommended.
+
 ## Features
 
 - Korean and English home pages and all 42 equipment/stage calculator pages.
