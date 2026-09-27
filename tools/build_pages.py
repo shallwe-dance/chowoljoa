@@ -128,9 +128,9 @@ def main():
                 write_page(calculator, locale, f'{locale}/calculate/{part}/{stage}/index.html', part, stage)
     (OUT / '.nojekyll').write_text('')
     (OUT / 'index.html').write_text('''<!DOCTYPE html>
-<html lang="ko"><head><meta charset="UTF-8"><title>초월조아</title>
-<meta http-equiv="refresh" content="0;url=ko/"></head>
-<body><a href="ko/">한국어</a> · <a href="en/">English</a></body></html>
+<html lang="en"><head><meta charset="UTF-8"><title>Chowoljoa</title>
+<meta http-equiv="refresh" content="0;url=en/"></head>
+<body><a href="en/">English</a> · <a href="ko/">한국어</a></body></html>
 ''')
     print('Built 45 static pages in docs/.')
 
