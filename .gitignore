@@ -2,23 +2,15 @@
 db.sqlite3
 *.pyc
 logs
-
-# Virtual Environment
+__pycache__/
+.venv/
 myenv/
 venv/
 env/
-
-# Python
-__pycache__/
-*.egg-info/
-dist/
-build/
-
-# IDE
-.vscode/
+*.pem
+.env
+*.swp
+*.swo
+myproject/media/
+myproject/static/
 .DS_Store
-
-# GitHub Pages (docs folder will be auto-generated from source)
-# Uncomment the line below if you want to keep docs/ out of git:
-# docs/
-

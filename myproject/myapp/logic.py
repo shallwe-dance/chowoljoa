@@ -1,6 +1,4 @@
-from collections import deque
 from collections import defaultdict
-import random
 
 ELZOWIN_BLESSING=[
     [0.4, 0.3, 0.2, 0.1],
@@ -40,16 +38,15 @@ def flatten_tablet(tablet_map, part, level):
              'weapon' : {1:15, 2:17, 3:20, 4:21, 5:24, 6:26, 7:29}
              }
     L=lengths[part][int(level)]
-    
+
     path=[]
     visited=set()
-    
+
     #start 위치 찾기
     for row in range(len(tablet_map)):
         for col in range(len(tablet_map[0])):
             if tablet_map[row][col]=='start':
                 current=(row, col)
-                #path.append('start')
                 visited.add(current)
                 break
 
@@ -62,21 +59,14 @@ def flatten_tablet(tablet_map, part, level):
     for i in range(L):
         for direction in directions:
             new=(current[0]+direction[0],current[1]+direction[1])
-            #print(current, new[0], new[1])
             if len(tablet_map)>new[0]>=0 and len(tablet_map[0])>new[1]>=0 and tablet_map[new[0]][new[1]] in MOVABLE and (new[0],new[1]) not in visited:
-                #print('new location: (',new[0],new[1],')')
                 path.append(tablet_map[new[0]][new[1]])
                 visited.add(current)
                 current=(new[0],new[1])
-                break      
+                break
     return path
 
 
-opportunities = {
-    'upper' : {1:4, 2:4, 3:5, 4:5, 5:6, 6:6, 7:7},
-    'otehrs' : {1:5, 2:5, 3:6, 4:6, 5:7, 6:7, 7:8},
-    'weapon' : {1:4, 2:4, 3:5, 4:5 , 5:6, 6:6, 7:7}
-}
 def compute_prob_dp(path, n, elzowin_level, init_enh):
     L = len(path)
     goal_idx = L - 1
@@ -112,8 +102,6 @@ def compute_prob_dp(path, n, elzowin_level, init_enh):
                 i2 = min(idx + steps, goal_idx)
 
                 # 2) 즉시 특수타일 효과
-                #print("current path :",path)
-                #print('current i2 :',i2)
                 while True:
                     tile = path[i2]
                     if tile == 'replicate':
@@ -142,31 +130,3 @@ def compute_prob_dp(path, n, elzowin_level, init_enh):
         dp_prev = dp_cur
 
     return {'within_n': prob_n, 'within_n_plus_1': prob_n1}
-
-def compute_expectation(total_count, path, unreached_special_tiles, part, stage, elzowin_level):
-    n=opportunities[part][int(stage)]
-    print('range :',list(range(len(path)-1)))
-    print('unreached :',unreached_special_tiles) #테스트할 때 실제로 특수 타일도 배치해야 잘 작동함.
-    random_locations=random.sample(range(1, len(path)-1), unreached_special_tiles) #except start and goal
-    random_specials=random.choices(SPECIAL, k=unreached_special_tiles)
-    for loc, special in zip(random_locations, random_specials):
-        path[loc] = special
-    # print('compute_expectation: ',end='')
-    print('unreached special tiles :',unreached_special_tiles)
-    print(compute_prob_dp(path, n-total_count, elzowin_level))
-
-
-
-def getNextPosition(r, c, tablet_map):
-    """
-    우→아래→좌→위 순서로 첫 번째로 만나는 MOVABLE 칸 반환
-    """
-    for dr, dc in ((0,1),(1,0),(0,-1),(-1,0)):
-        nr, nc = r+dr, c+dc
-        if 0 <= nr < len(tablet_map) and 0 <= nc < len(tablet_map[0]):
-            if tablet_map[nr][nc] in {'path','start','goal',
-                                      'replicate','development',
-                                      'purification','enhancement','awakening'}:
-                return (nr, nc)
-    return None
-    

@@ -1,10 +1,7 @@
-from logic import ELZOWIN_BLESSING
-from logic import compute_expectation
 from logic import compute_prob_dp
 from logic import SPECIAL
 import random
 from tqdm import tqdm
-import time
 import csv
 
 iterations=10
@@ -42,25 +39,8 @@ for i in tqdm(tiles):
                         random_specials=random.choices(SPECIAL, k=j)
                         for loc, special in zip(random_locations, random_specials):
                             path[loc] = special
-                        cases[(str(i),str(j),str(d),str(e))]+=(1/n)*(compute_prob_dp(path, d, e)['within_n']- cases[(str(i),str(j),str(d),str(e))])
+                        cases[(str(i),str(j),str(d),str(e))]+=(1/n)*(compute_prob_dp(path, d, e, 0)['within_n']- cases[(str(i),str(j),str(d),str(e))])
 with open("expectations.csv", mode="w", newline='', encoding="utf-8") as f:
     writer = csv.writer(f)
     for key, value in cases.items():
         writer.writerow([key, value])
-
-                        
-
-                    
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -19,7 +19,6 @@ STATUS_CHOICES = [
 class Contact(models.Model):
     id = models.AutoField(primary_key=True)
     subject = models.CharField(max_length=100)
-    #category= models.CharField(max_length=50, blank=True)
     content = models.TextField(max_length=2000)
     reply_to = models.CharField(blank=True, null=True, max_length=50)
     published_date = models.DateTimeField()
@@ -35,6 +34,3 @@ class Contact(models.Model):
 
     def __str__(self):
         return self.subject
-    
-    #locale=models.CharField(max_length=10, default='ko')
-

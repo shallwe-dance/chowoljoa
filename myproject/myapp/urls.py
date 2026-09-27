@@ -1,10 +1,9 @@
-from django.urls import path, include
+from django.urls import path
 from . import views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.views.generic import RedirectView
 from django.http import HttpResponse
-#from django.views.generic.base import RedirectView
 
 my_robots_txt="""
 User-agent: *

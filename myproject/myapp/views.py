@@ -5,74 +5,11 @@ from django.shortcuts import render, redirect
 from .logic import process_tablet
 from .logic import compute_prob_dp
 from .logic import flatten_tablet
-from .logic import compute_expectation
 from .models import Contact
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
 
-#@csrf_exempt
-def calc_probabilities(request):
-    """
-    POST /api/calc-probabilities/
-    body: {
-      tablet_map: [[…], […], …],    # 2D 석판 배열
-      start_pos: [r, c],              # 시작 좌표
-      n: <정화 횟수>,
-      elzowin_level: <0~8 정수>
-    }
-    returns JSON { within_n:…, within_n_plus_1:… }
-    """
-    try:
-        data = json.loads(request.body)
-    except json.JSONDecodeError:
-        return JsonResponse({'error': 'Invalid JSON'}, status=400)
-
-    tablet_map     = data.get('tablet_map')
-    spirit_pos      = data.get('spiritPos')
-    n              = data.get('n')
-    elzowin_level  = data.get('elzowin_level')
-    total_count    = data.get('totalCount')
-    visited_list   = data.get('visitedList',[])
-
-    # 필수 파라미터 검증
-    if tablet_map is None:
-        return JsonResponse({'error': 'tablet_map is required'}, status=400)
-    if spirit_pos is None or len(spirit_pos) != 2:
-        return JsonResponse({'error': 'spirit_pos must be [r, c]'}, status=400)
-    if n is None:
-        return JsonResponse({'error': 'n is required'}, status=400)
-    if elzowin_level is None:
-        return JsonResponse({'error': 'elzowin_level is required'}, status=400)
-
-
-    # 0) visited리스트 적용, 새로운 start 찾기
-    for vr, vc in visited_list:
-        tablet_map[vr][vc] = 'visited'
-    
-    for i in range(len(tablet_map)):
-        for j in range(len(tablet_map[0])):
-            if tablet_map[i][j] == 'start':
-                tablet_map[i][j] = 'path'
-
-    sr, sc = spirit_pos
-    tablet_map[sr][sc] = 'start'
-
-    # 1) 2D map → 1D path
-    path = flatten_tablet(tablet_map)
-    print(path)
-
-    # 2) DP 계산
-    result = compute_prob_dp(path, n-total_count, elzowin_level)
-
-    # 3) 결과 반환
-    return JsonResponse({
-        'within_n':        result['within_n'],
-        'within_n_plus_1': result['within_n_plus_1'],
-    })
-
-#@csrf_exempt
 @require_POST
 def update_tablet(request):
     try:
@@ -92,13 +29,11 @@ def update_tablet(request):
     part           = payload.get('item_type')
     n              = payload.get('n')
     unreached_special_tiles = payload.get('unreached_special_tiles')
-    
+
     # 0) visited리스트 적용, 새로운 start 찾기
-    #print("visited_list :",visited_list)
     for vr, vc in visited_list:
         tablet_map[vr][vc] = 'visited'
-    #print("enh count :",enhancement_count)
-    
+
     for i in range(len(tablet_map)):
         for j in range(len(tablet_map[0])):
             if tablet_map[i][j] == 'start':
@@ -107,16 +42,11 @@ def update_tablet(request):
     sr, sc = spirit_pos
     tablet_map[sr][sc] = 'start'
 
-    # print("<debug>")
-    # print("(1) tablet_map")
-    # for row in tablet_map:
-    #     print(row)
 
     path=flatten_tablet(tablet_map,part,stage)
 
-    #compute_expectation(total_count, path[:], int(unreached_special_tiles), part, stage, elzowin_level)
     expectations = {}
-    
+
     with open("./myapp/expectations.csv", mode="r", encoding="utf-8") as f:
         reader = csv.reader(f)
         for row in reader:
@@ -126,26 +56,20 @@ def update_tablet(request):
         my_expectation_n=expectations[str((str(len(path)-1),str(unreached_special_tiles),str(n-total_count),str(elzowin_level)))]
     except KeyError:
         my_expectation_n=1.0
-    try:    
+    try:
         my_expectation_n_1=expectations[str((str(len(path)-1),str(unreached_special_tiles),str(n-total_count+1),str(elzowin_level)))]
     except KeyError:
         my_expectation_n_1=1.0
     my_expectations=[my_expectation_n, my_expectation_n_1]
-    
+
     probs = compute_prob_dp(
         path,
-        #spirit_pos,
         n-total_count,
         elzowin_level,
         enhancement_count
     )
-    
-    # print("(2) spirit_pos :",spirit_pos)
-    # print("(3) total_count :",total_count)
-    # print("(4) elzowin_level :",elzowin_level)
-    # print("(2) path")
-    # print(path)
-    
+
+
 
     if tablet_map is None:
         return JsonResponse({"error": "tabletMap is required"}, status=400)
@@ -206,8 +130,6 @@ def contact(request):
         content   = request.POST.get('content', '').strip()
         reply_to  = request.POST.get('reply_to', '').strip() or None
         # category 필드가 폼에 없으면 빈 문자열로
-        #category  = request.POST.get('category', '').strip()
-        attachment = request.FILES.get('attachment')
 
         # 2) 메타데이터
         ip         = get_client_ip(request)
@@ -234,4 +156,3 @@ def contact(request):
 
     # GET 으로 들어오면 KO 메인으로
     return redirect('ko_index')
-    
