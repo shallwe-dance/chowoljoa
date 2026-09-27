@@ -2,6 +2,8 @@
 
 A Django application for Lost Ark transcendence probability calculations, with Korean and English interfaces. The calculator evaluates tablet paths and uses a precomputed expectation table. Contact submissions are stored in SQLite and managed through Django admin.
 
+You can test Chowoljoa [here](https://shallwe-dance.github.io/chowoljoa/ko/)
+
 ## Local development
 
 Use Python 3.10 or newer. From the repository root:
